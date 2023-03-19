@@ -9,7 +9,7 @@ const ChatPage = () => {
   const [textInput, setTextInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const BASE_URL = 'http://localhost:8080';
+  const BASE_URL = 'https://ali-chatbot-api.onrender.com';
   const startOptions = `
     <ul>
       <li>Type <strong>1</strong> to place an order</li>
