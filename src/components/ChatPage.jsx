@@ -9,7 +9,7 @@ const ChatPage = () => {
   const [textInput, setTextInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const BASE_URL = 'https://ali-chatbot-api.onrender.com';
+  const BASE_URL = 'http://localhost:8080';
   const startOptions = `
     <ul>
       <li>Type <strong>1</strong> to place an order</li>
@@ -39,6 +39,10 @@ const ChatPage = () => {
   }
 
   const initiateChat = () => {
+    const deviceId = localStorage.getItem("deviceId")
+    if(!deviceId){
+
+    }
     const storedMessages = localStorage.getItem('messages');
 
     if (storedMessages) {
@@ -61,7 +65,7 @@ const ChatPage = () => {
     for (const datum of data) {
       table += `
         <tr>
-          <td>${datum.id}</td> <td>${datum.name}</td> <td>${datum.price}</td>
+          <td>${datum.code}</td> <td>${datum.name}</td> <td>${datum.price}</td>
         </tr>
       `;
     }
@@ -118,6 +122,8 @@ const ChatPage = () => {
 
   const handleResponse = ({ action, data }) => {
     setCurrentAction(action);
+
+    console.log(action,data)
 
     let message = 'Welcome, how may I serve you?';
 
@@ -198,7 +204,7 @@ const ChatPage = () => {
   //             action: '1',
   //             data: {
   //               message: 'No order to place. Please, try again by selecting any of the options below:',
-  //             },
+  //             }, 
   //           }
   //         }
   //       }
@@ -277,16 +283,13 @@ const ChatPage = () => {
 
   
 
-    const response = await fetch(url,{
-      method:'post',
-      headers:{'content-type':'application/json'},
-      body:JSON.stringify(body)
-    })
+    const response = await axios.post(url,body);
+    
   
-    console.log(response,"adeku")
+    console.log(response.data,"adeku");
     // await new Promise(resolve => setTimeout(resolve, 2000));
-
-    handleResponse(response.body);
+    
+    handleResponse(response.data);
 
     setIsProcessing(false);
   };
