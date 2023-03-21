@@ -80,7 +80,7 @@ const ChatPage = () => {
   }
 
   const transformCurrentOrder = (data) => {
-    const prefix = `Your current order with order number <strong>${data.id}</strong> has the following products:`;
+    const prefix = `Your current order with order number <strong>${data.item[0].code}</strong> has the following products:`;
 
     let total = 0;
     let table = `
@@ -92,10 +92,11 @@ const ChatPage = () => {
         </th>
     `;
 
-    for (const datum of data.items) {
+    for (const datum of data.item) {
+      console.log(data)
       table += `
         <tr>
-          <td>${datum.id}</td> <td>${datum.name}</td> <td>${datum.price}</td>
+          <td>${datum.code}</td> <td>${datum.name}</td> <td>${datum.price}</td>
         </tr>
       `;
 
