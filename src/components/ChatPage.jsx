@@ -9,8 +9,8 @@ const ChatPage = () => {
   const [textInput, setTextInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // const BASE_URL = 'https://ali-chatbot-api.onrender.com';
-  const BASE_URL = "http://localhost:8080";
+  const BASE_URL = 'https://ali-chatbot-api.onrender.com';
+  // const BASE_URL = "http://localhost:8080";
   const startOptions = `
     <ul>
       <li>Type <strong>1</strong> to place an order</li>
@@ -116,7 +116,7 @@ const ChatPage = () => {
     let message = `You have ${data.length} order(s). They are: <br><ul>`;
 
     for (const datum of data) {
-      message += `<li>${datum.id} - ${datum.items.length} product(s)</li>`;
+      message += `<li>${datum.code} - ${datum.name} product(s)</li>`;
     }
 
     message += '</ul>';
@@ -155,7 +155,7 @@ const ChatPage = () => {
         setInputIsAction(true);
         setCurrentAction('1');
         break;
-      default:
+      default:  
         message += startOptions;
         setInputIsAction(true);
         setCurrentAction('1');
