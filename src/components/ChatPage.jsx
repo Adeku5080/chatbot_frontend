@@ -9,7 +9,8 @@ const ChatPage = () => {
   const [textInput, setTextInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const BASE_URL = 'https://ali-chatbot-api.onrender.com';
+  // const BASE_URL = 'https://ali-chatbot-api.onrender.com';
+  const BASE_URL = "http://localhost:8080";
   const startOptions = `
     <ul>
       <li>Type <strong>1</strong> to place an order</li>
@@ -291,7 +292,7 @@ const ChatPage = () => {
     });
     
   
-    console.log(response.data,'response');
+    console.log(response,'response');
     // await new Promise(resolve => setTimeout(resolve, 2000));
     
     handleResponse(response.data);
@@ -336,10 +337,16 @@ const ChatPage = () => {
 }
 
 const Container = styled.div`
-  border:1px solid blue;
+  border:1px solid black;
   width: 60vw;
   margin:0 auto;
   height: calc(100vh - 80px);
+
+   @media(max-width : 800px){
+     margin :0;
+     width :100%;
+     border:1px solid green;
+    }
 `;
 
 const MessageContainer = styled.div`
@@ -357,11 +364,21 @@ const MessageContainer = styled.div`
   .message-item.bot {
     background: rgba(0, 0, 0, .5);
     align-self: flex-start;
+    
+    @media(max-width : 800px){
+     width :40%;
+     font-size:12px;
+    }
   }
 
   .message-item.user {
     background: rgba(0, 0, 200, .5);
     align-self: flex-end;
+
+     @media(max-width : 800px){
+     width :40%;
+     font-size:12px;
+    }
   }
 
   .processing-status {
@@ -383,16 +400,25 @@ bottom:10px;
 display:flex;
 
 // border:1px solid black;
-width :50vw;
+width :55vw;
 height:50px;
 margin:0 auto;
 
+ @media(max-width : 800px){
+      width:78vw;
+      // border:1px solid red;
+    }
+
 input{
-    border:1px solid red;
+    border:1px solid black;
     width:100%;
     height:100%;
     border-radius:12px;
     margin:0 auto;
+     @media(max-width : 800px){
+     width :100%;
+     font-size:12px;
+    }
 }
 
 button{

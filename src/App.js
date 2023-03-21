@@ -11,10 +11,11 @@ const App = () => {
 };
 
 const Container = styled.div`
-border:1px solid red;
+border:1px solid black;
 height :100vh;
 width :80vw;
 margin:0 auto;
+
 
 
 `
