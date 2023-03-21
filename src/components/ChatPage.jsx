@@ -38,10 +38,15 @@ const ChatPage = () => {
     });
   }
 
-  const initiateChat = () => {
+  const initiateChat = async() => {
     const deviceId = localStorage.getItem("deviceId")
+    console.log(deviceId, 'checking device id');
     if(!deviceId){
-
+     const {data:{device}} = await axios.post(`${BASE_URL}/api/v1/device`,{
+      name : 'device'
+     })
+      localStorage.setItem('deviceId', device._id)
+    //  console.log(res)
     }
     const storedMessages = localStorage.getItem('messages');
 
@@ -279,14 +284,16 @@ const ChatPage = () => {
     setTextInput('');
 
     // do API call
-    console.log({ url, body });
+    // console.log({ url, body });
 
-  
+      const deviceId = localStorage.getItem("deviceId")
 
-    const response = await axios.post(url,body);
+    const response = await axios.post(url,body,{
+      headers:{"Authorization":`${deviceId}`}
+    });
     
   
-    console.log(response.data,"adeku");
+    console.log(response.data,'response');
     // await new Promise(resolve => setTimeout(resolve, 2000));
     
     handleResponse(response.data);
