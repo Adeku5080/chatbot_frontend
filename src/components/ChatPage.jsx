@@ -113,10 +113,13 @@ const ChatPage = () => {
   }
 
   const transformOrderHistory = (data) => {
+
     let message = `You have ${data.length} order(s). They are: <br><ul>`;
 
+
     for (const datum of data) {
-      message += `<li>${datum.code} - ${datum.name} product(s)</li>`;
+      console.log((datum) ,"adeku")
+      message += `<li>${datum.item[0].code} - ${datum.item[0].name} product(s)</li>`;
     }
 
     message += '</ul>';
