@@ -40,13 +40,11 @@ const ChatPage = () => {
 
   const initiateChat = async() => {
     const deviceId = localStorage.getItem("deviceId")
-    console.log(deviceId, 'checking device id');
     if(!deviceId){
      const {data:{device}} = await axios.post(`${BASE_URL}/api/v1/device`,{
       name : 'device'
      })
       localStorage.setItem('deviceId', device._id)
-    //  console.log(res)
     }
     const storedMessages = localStorage.getItem('messages');
 
@@ -62,7 +60,7 @@ const ChatPage = () => {
       <table>
         <th>
           <tr>
-            <td>Code</td> <td>Amount</td> <td>Price</td>
+            <td>Code</td> <td>Name</td> <td>Price</td>
           </tr>
         </th>
     `;
@@ -88,7 +86,7 @@ const ChatPage = () => {
       <table>
         <th>
           <tr>
-            <td>Code</td> <td>Amount</td> <td>Price</td>
+            <td>Code</td> <td>Name</td> <td>Price</td>
           </tr>
         </th>
     `;
