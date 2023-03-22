@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import styled from "styled-components"
-import axios from "axios"
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import axios from "axios";
 
 const ChatPage = () => {
-  const [currentAction, setCurrentAction] = useState('1');
+  const [currentAction, setCurrentAction] = useState("1");
   const [messages, setMessages] = useState([]);
   const [inputIsAction, setInputIsAction] = useState(true);
-  const [textInput, setTextInput] = useState('');
+  const [textInput, setTextInput] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const BASE_URL = 'https://ali-chatbot-api.onrender.com';
@@ -29,32 +29,34 @@ const ChatPage = () => {
         {
           isBot,
           body: message,
-        }
+        },
       ];
 
       // update message in local storage.
-      localStorage.setItem('messages', JSON.stringify(allMessages));
+      localStorage.setItem("messages", JSON.stringify(allMessages));
 
       return allMessages;
     });
-  }
+  };
 
-  const initiateChat = async() => {
-    const deviceId = localStorage.getItem("deviceId")
-    if(!deviceId){
-     const {data:{device}} = await axios.post(`${BASE_URL}/api/v1/device`,{
-      name : 'device'
-     })
-      localStorage.setItem('deviceId', device._id)
+  const initiateChat = async () => {
+    const deviceId = localStorage.getItem("deviceId");
+    if (!deviceId) {
+      const {
+        data: { device },
+      } = await axios.post(`${BASE_URL}/api/v1/device`, {
+        name: "device",
+      });
+      localStorage.setItem("deviceId", device._id);
     }
-    const storedMessages = localStorage.getItem('messages');
+    const storedMessages = localStorage.getItem("messages");
 
     if (storedMessages) {
       setMessages(JSON.parse(storedMessages));
     }
 
     addToMessage(`Welcome, how may I serve you? ${startOptions}`);
-  }
+  };
 
   const transformToItemTable = (data) => {
     let table = `
@@ -74,10 +76,10 @@ const ChatPage = () => {
       `;
     }
 
-    table += '</table>';
+    table += "</table>";
 
     return `Select one or more of the items in the table below by typing the product codes and separating with a comma e.g (1,2 or 1):<br>${table}`;
-  }
+  };
 
   const transformCurrentOrder = (data) => {
     const prefix = `Your current order with order number <strong>${data.item[0].code}</strong> has the following products:`;
@@ -93,7 +95,7 @@ const ChatPage = () => {
     `;
 
     for (const datum of data.item) {
-      console.log(data)
+      console.log(data);
       table += `
         <tr>
           <td>${datum.code}</td> <td>${datum.name}</td> <td>${datum.price}</td>
@@ -111,68 +113,66 @@ const ChatPage = () => {
     `;
 
     return `${prefix} <br><br> ${table} <br> <br> What more can I do for you? <br> ${startOptions}`;
-  }
+  };
 
   const transformOrderHistory = (data) => {
-
     let message = `You have ${data.length} order(s). They are: <br><ul>`;
 
-
     for (const datum of data) {
-      console.log((datum) ,"adeku")
-      message += `<li>${datum.item[0].code} - ${datum.item[0].name} product(s)</li>`;
+      for (const item of datum.item) {
+        message += `<li> ${item.name} </li>`;
+      }
     }
-
-    message += '</ul>';
+    message += "</ul>";
 
     return `${message}<br> <br> What more can I do for you? <br> ${startOptions}`;
-  }
+  };
 
   const handleResponse = ({ action, data }) => {
     setCurrentAction(action);
 
-    console.log(action,data)
+    console.log(action, data);
 
-    let message = 'Welcome, how may I serve you?';
+    let message = "Welcome, how may I serve you?";
 
     switch (action) {
-      case '1':
+      case "1":
         message = (data?.message || message) + startOptions;
         setInputIsAction(true);
         break;
-      case '1-res':
+      case "1-res":
         message = transformToItemTable(data);
 
         setInputIsAction(false);
-        setCurrentAction('1-res');
+        setCurrentAction("1-res");
         break;
 
-      case '97-res':
+      case "97-res":
         message = transformCurrentOrder(data);
 
         setInputIsAction(true);
-        setCurrentAction('1');
+        setCurrentAction("1");
         break;
-      case '98-res':
+      case "98-res":
         message = transformOrderHistory(data);
 
         setInputIsAction(true);
-        setCurrentAction('1');
+        setCurrentAction("1");
         break;
-      default:  
+      default:
         message += startOptions;
         setInputIsAction(true);
-        setCurrentAction('1');
+        setCurrentAction("1");
     }
 
     addToMessage(message);
-  }
+  };
 
   /**
    * Todo: replace with actual API call.
-   * 
-   * @param {Object} body 
-   * @returns 
+   *
+   * @param {Object} body
+   * @returns
    */
   // const createResponse = (body) => {
   //   const sampleProducts = [
@@ -196,7 +196,7 @@ const ChatPage = () => {
   //         }
   //       }
   //     case '1':
-       
+
   //       return {
   //         body: {
   //           action: '1-res',
@@ -212,7 +212,7 @@ const ChatPage = () => {
   //             action: '1',
   //             data: {
   //               message: 'No order to place. Please, try again by selecting any of the options below:',
-  //             }, 
+  //             },
   //           }
   //         }
   //       }
@@ -284,21 +284,20 @@ const ChatPage = () => {
     // push the message to message-list.
     addToMessage(textInput, false);
     setIsProcessing(true);
-    setTextInput('');
+    setTextInput("");
 
     // do API call
     // console.log({ url, body });
 
-      const deviceId = localStorage.getItem("deviceId")
+    const deviceId = localStorage.getItem("deviceId");
 
-    const response = await axios.post(url,body,{
-      headers:{"Authorization":`${deviceId}`}
+    const response = await axios.post(url, body, {
+      headers: { Authorization: `${deviceId}` },
     });
-    
-  
-    console.log(response,'response');
+
+    console.log(response, "response");
     // await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     handleResponse(response.data);
 
     setIsProcessing(false);
@@ -306,7 +305,7 @@ const ChatPage = () => {
 
   const handleChange = (e) => {
     setTextInput(e.target.value);
-  }
+  };
 
   useEffect(() => {
     if (loaded) {
@@ -322,41 +321,53 @@ const ChatPage = () => {
       <MessageContainer>
         {messages.map((message, index) => {
           return (
-            <div key={index} className={'message-item ' + (message.isBot ? 'bot' : 'user')}
-              dangerouslySetInnerHTML={{ __html: message.body }}></div>
+            <div
+              key={index}
+              className={"message-item " + (message.isBot ? "bot" : "user")}
+              dangerouslySetInnerHTML={{ __html: message.body }}
+            ></div>
           );
         })}
 
-        <div className={'processing-status ' + (isProcessing ? 'show' : 'hide')}>bot is typing...</div>
+        <div
+          className={"processing-status " + (isProcessing ? "show" : "hide")}
+        >
+          bot is typing...
+        </div>
       </MessageContainer>
 
       <InputContainer>
-        <input type={inputIsAction ? 'number' : 'text'} placeholder="Type your response here" value={textInput} onChange={handleChange} />
+        <input
+          type={inputIsAction ? "number" : "text"}
+          placeholder="Type your response here"
+          value={textInput}
+          onChange={handleChange}
+        />
         <button onClick={handleSubmit}>
           <img src="/svg/send.svg" alt="send" width={20} height={20} />
         </button>
       </InputContainer>
     </Container>
-  )
-}
+  );
+};
 
 const Container = styled.div`
-  border:1px solid black;
+  border: 1px solid black;
   width: 60vw;
-  margin:0 auto;
+  margin: 0 auto;
   height: calc(100vh - 80px);
 
-   @media(max-width : 800px){
-     margin :0;
-     width :100%;
-     border:1px solid green;
-    }
+  @media (max-width: 800px) {
+    margin: 0;
+    width: 100%;
+    border: 1px solid green;
+  }
 `;
 
 const MessageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: .5em;
+  gap: 0.5em;
   overflow-y: scroll;
   height: calc(100% - 50px);
 
@@ -366,22 +377,22 @@ const MessageContainer = styled.div`
   }
 
   .message-item.bot {
-    background: rgba(0, 0, 0, .5);
+    background: rgba(0, 0, 0, 0.5);
     align-self: flex-start;
-    
-    @media(max-width : 800px){
-     width :40%;
-     font-size:12px;
+
+    @media (max-width: 800px) {
+      width: 40%;
+      font-size: 12px;
     }
   }
 
   .message-item.user {
-    background: rgba(0, 0, 200, .5);
+    background: rgba(0, 0, 200, 0.5);
     align-self: flex-end;
 
-     @media(max-width : 800px){
-     width :40%;
-     font-size:12px;
+    @media (max-width: 800px) {
+      width: 40%;
+      font-size: 12px;
     }
   }
 
@@ -399,36 +410,36 @@ const MessageContainer = styled.div`
 `;
 
 const InputContainer = styled.div`
-position:absolute;
-bottom:10px;
-display:flex;
+  position: absolute;
+  bottom: 10px;
+  display: flex;
 
-// border:1px solid black;
-width :55vw;
-height:50px;
-margin:0 auto;
+  // border:1px solid black;
+  width: 55vw;
+  height: 50px;
+  margin: 0 auto;
 
- @media(max-width : 800px){
-      width:78vw;
-      // border:1px solid red;
+  @media (max-width: 800px) {
+    width: 78vw;
+    // border:1px solid red;
+  }
+
+  input {
+    border: 1px solid black;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    margin: 0 auto;
+    @media (max-width: 800px) {
+      width: 100%;
+      font-size: 12px;
     }
+  }
 
-input{
-    border:1px solid black;
-    width:100%;
-    height:100%;
-    border-radius:12px;
-    margin:0 auto;
-     @media(max-width : 800px){
-     width :100%;
-     font-size:12px;
-    }
-}
+  button {
+    border: none;
+    background: none;
+  }
+`;
 
-button{
-  border:none;
-  background:none;
-}
-`
-
-export default ChatPage
+export default ChatPage;
